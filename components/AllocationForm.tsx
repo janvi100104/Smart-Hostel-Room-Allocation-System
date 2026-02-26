@@ -3,16 +3,18 @@
 import { useState } from 'react';
 import { Users, Wind, Droplet, ArrowRight } from 'lucide-react';
 import { Room, AllocationResult } from '@/app/types';
-import { getRooms } from '@/utils/storage';
+import { getRooms, allocateRoomToStudents } from '@/utils/storage';
 
 interface AllocationFormProps {
-  onAllocationComplete: (result: AllocationResult) => void;
+  onAllocationComplete: (result: AllocationResult, room?: Room) => void;
   onError: (message: string) => void;
+  onRoomAllocated: (room: Room) => void;
 }
 
 export const AllocationForm: React.FC<AllocationFormProps> = ({
   onAllocationComplete,
   onError,
+  onRoomAllocated,
 }) => {
   const [studentCount, setStudentCount] = useState('');
   const [needAC, setNeedAC] = useState(false);
@@ -45,8 +47,11 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({
       return;
     }
 
-    // Filter rooms based on requirements
+    // Filter rooms based on requirements - only unallocated rooms
     let filteredRooms = allRooms.filter((room) => {
+      // Skip already allocated rooms
+      if (room.isAllocated) return false;
+
       // Check capacity
       if (room.capacity < studentsNeeded) return false;
 
@@ -75,11 +80,18 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({
     // Select the first room (best match)
     if (filteredRooms.length > 0) {
       const selectedRoom = filteredRooms[0];
-      onAllocationComplete({
-        room: selectedRoom,
-        message: `Successfully allocated Room ${selectedRoom.roomNo}`,
-        isSuccess: true,
-      });
+      
+      // Mark room as allocated (without student names for now)
+      const allocatedRoom = allocateRoomToStudents(selectedRoom.id, '');
+      
+      if (allocatedRoom) {
+        onRoomAllocated(allocatedRoom);
+        onAllocationComplete({
+          room: allocatedRoom,
+          message: `Successfully allocated Room ${allocatedRoom.roomNo}`,
+          isSuccess: true,
+        }, allocatedRoom);
+      }
     } else {
       onAllocationComplete({
         room: null,

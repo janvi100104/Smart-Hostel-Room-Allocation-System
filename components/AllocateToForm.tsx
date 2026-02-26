@@ -18,7 +18,7 @@ export const AllocateToForm: React.FC<AllocateToFormProps> = ({
   onError,
   onClose,
 }) => {
-  const [studentNames, setStudentNames] = useState('');
+  const [studentNames, setStudentNames] = useState(room?.allocatedTo || '');
   const [isAllocating, setIsAllocating] = useState(false);
 
   if (!room) return null;

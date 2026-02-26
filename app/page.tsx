@@ -71,7 +71,7 @@ export default function Home() {
   };
 
   // Allocation handler
-  const handleAllocationComplete = (result: AllocationResultType) => {
+  const handleAllocationComplete = (result: AllocationResultType, allocatedRoom?: Room) => {
     setAllocationResult(result);
     if (result.isSuccess) {
       addToast('success', result.message);
@@ -80,9 +80,20 @@ export default function Home() {
     }
   };
 
+  const handleRoomAllocated = (room: Room) => {
+    // Update the rooms state to reflect the allocation
+    setRooms((prev) =>
+      prev.map((r) =>
+        r.id === room.id ? room : r
+      )
+    );
+  };
+
   // Handle allocating to specific student
   const handleAllocateTo = (result: AllocationResultType & { room: NonNullable<AllocationResultType['room']> }) => {
-    setRoomToAllocate(result.room);
+    // Get the latest room data from state
+    const latestRoom = rooms.find(r => r.id === result.room.id);
+    setRoomToAllocate(latestRoom || result.room);
   };
 
   const handleAllocateToComplete = (updatedRoom: Room, success: boolean) => {
@@ -185,6 +196,7 @@ export default function Home() {
             <AllocationForm
               onAllocationComplete={handleAllocationComplete}
               onError={(msg) => addToast('error', msg)}
+              onRoomAllocated={handleRoomAllocated}
             />
 
             <AllocationResult 
