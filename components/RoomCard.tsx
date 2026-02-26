@@ -22,9 +22,9 @@ export const RoomCard: React.FC<RoomCardProps> = ({
     if (room.isAllocated) {
       return { 
         label: 'Allocated', 
-        color: 'bg-red-500', 
-        textColor: 'text-red-600 dark:text-red-400',
-        icon: <XCircle className="w-4 h-4" />
+        color: 'bg-blue-500', 
+        textColor: 'text-blue-600 dark:text-blue-400',
+        icon: <Users className="w-4 h-4" />
       };
     }
     if (room.capacity <= 0) {
@@ -75,12 +75,12 @@ export const RoomCard: React.FC<RoomCardProps> = ({
 
           {/* Allocated To */}
           {room.isAllocated && room.allocatedTo && (
-            <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3 border border-red-100 dark:border-red-800">
+            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 border border-blue-100 dark:border-blue-800">
               <div className="flex items-start gap-2">
-                <Users className="w-4 h-4 text-red-600 dark:text-red-400 mt-0.5" />
+                <Users className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5" />
                 <div>
-                  <p className="text-xs font-medium text-red-700 dark:text-red-300">Allocated to:</p>
-                  <p className="text-sm text-red-800 dark:text-red-200">{room.allocatedTo}</p>
+                  <p className="text-xs font-medium text-blue-700 dark:text-blue-300">Allocated to:</p>
+                  <p className="text-sm text-blue-800 dark:text-blue-200">{room.allocatedTo}</p>
                 </div>
               </div>
             </div>
@@ -117,7 +117,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({
           {showDeallocate && onDeallocate && room.isAllocated && (
             <button
               onClick={() => onDeallocate(room.id)}
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors text-sm font-medium"
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors text-sm font-medium"
             >
               Deallocate
             </button>

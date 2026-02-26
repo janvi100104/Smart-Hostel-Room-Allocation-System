@@ -119,9 +119,9 @@ export const AllocationResult: React.FC<AllocationResultProps> = ({
               {showAllocateTo && onAllocateTo && (
                 <button
                   onClick={handleAllocateTo}
-                  className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
+                  className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
                 >
-                  <UserCheck className="w-4 h-4" />
+                  <Users className="w-4 h-4" />
                   Allocate to Student(s)
                 </button>
               )}

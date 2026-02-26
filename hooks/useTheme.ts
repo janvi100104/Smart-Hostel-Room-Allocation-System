@@ -9,10 +9,11 @@ export const useTheme = () => {
 
   useEffect(() => {
     setIsMounted(true);
+    // Get saved theme or system preference
     const savedTheme = getTheme();
     setTheme(savedTheme);
     
-    // Apply theme class to document
+    // Apply theme class to document element
     if (savedTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
@@ -24,6 +25,13 @@ export const useTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     saveTheme(newTheme);
+    
+    // Apply/remove dark class
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }, [theme]);
 
   return { theme, toggleTheme, isMounted };
