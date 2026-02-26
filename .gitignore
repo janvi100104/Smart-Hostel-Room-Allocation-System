@@ -1,41 +1,254 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# ==================================
+# Dependencies
+# ==================================
+
 /node_modules
 /.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
+!.yarn/patches/*.patch
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+.yarn-integrity
+.eslintcache
 
-# testing
-/coverage
-
-# next.js
+# ==================================
+# Next.js
+# ==================================
 /.next/
 /out/
+next-env.d.ts
+*.tsbuildinfo
 
-# production
+# ==================================
+# Production Build
+# ==================================
 /build
+/dist
 
-# misc
-.DS_Store
-*.pem
+# ==================================
+# Environment Variables
+# ==================================
+# .env files are sensitive and should not be committed
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
 
-# debug
+# Allow non-sensitive .env files to be committed if needed
+# !.env.example
+# !.env.template
+
+# ==================================
+# Testing
+# ==================================
+/coverage
+/.nyc_output
+coverage/
+.nyc_output/
+*.lcov
+jest-results.json
+
+# ==================================
+# Debug & Logs
+# ==================================
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 .pnpm-debug.log*
+logs/
+*.log
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+lerna-debug.log
 
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
+# ==================================
+# Vercel
+# ==================================
 .vercel
+.vercel/*
+!.vercel/project.json
+!.vercel/releaserc
 
-# typescript
+# ==================================
+# TypeScript
+# ==================================
 *.tsbuildinfo
+tsconfig.tsbuildinfo
 next-env.d.ts
+
+# ==================================
+# IDE & Editors
+# ==================================
+# VS Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+.#*
+*.sublime-project
+*.sublime-workspace
+
+# JetBrains
+.iml
+*.iml
+.ipr
+*.ipr
+.iws
+*.iws
+.idea/
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+
+# Vim
+*.swp
+*.swo
+*.swn
+*.un~
+.netrwhist
+
+# OS generated files
+# ==================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.Trash-*
+.nfs-*
+
+# ==================================
+# Temporary Files
+# ==================================
+*.tmp
+*.temp
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+
+# ==================================
+# Optional npm cache directory
+# ==================================
+.npm
+.eslintcache
+
+# ==================================
+# Optional eslint cache
+# ==================================
+.eslintcache
+
+# ==================================
+# Optional stylelint cache
+# ==================================
+.stylelintcache
+
+# ==================================
+# Misc
+# ==================================
+*.pem
+*.log
+*.pid
+*.seed
+*.pid.lock
+lock-gyp
+*.tgz
+*.tar
+*.tar.gz
+*.rar
+*.zip
+*.7z
+
+# ==================================
+# Optional npm debug logs
+# ==================================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==================================
+# Package Manager Locks (Keep one!)
+# ==================================
+# Keep package-lock.json OR yarn.lock OR pnpm-lock.yaml
+# Uncomment the ones you don't use:
+
+# yarn.lock
+# pnpm-lock.yaml
+
+# ==================================
+# Storybook
+# ==================================
+storybook-static/
+.storybook-cache/
+
+# ==================================
+# Playwright
+# ==================================
+playwright-report/
+playwright/.cache/
+
+# ==================================
+# Sentry
+# ==================================
+.sentryclirc
+sentry.properties
+
+# ==================================
+# GraphQL Code Generator
+# ==================================
+graphql.config.json
+.graphqlrc
+.graphqlrc.json
+.graphqlrc.yaml
+.graphqlrc.yml
+
+# ==================================
+# Husky
+# ==================================
+.husky/.gitignore
+
+# ==================================
+# Turbo
+# ==================================
+.turbo
+turbo.log
+
+# ==================================
+# Comments
+# ==================================
+# This .gitignore is optimized for Next.js + TypeScript projects
+# Feel free to customize based on your project needs
