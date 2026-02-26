@@ -49,6 +49,7 @@ export const AddRoomForm: React.FC<AddRoomFormProps> = ({
       capacity: parseInt(capacity),
       hasAC,
       hasAttachedWashroom,
+      isAllocated: false,
     });
 
     onRoomAdded(newRoom);

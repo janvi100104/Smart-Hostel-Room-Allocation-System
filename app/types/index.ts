@@ -6,6 +6,8 @@ export interface Room {
   hasAC: boolean;
   hasAttachedWashroom: boolean;
   createdAt: number;
+  allocatedTo?: string; // Names of students allocated to this room (comma-separated)
+  isAllocated: boolean; // Whether the room is currently allocated
 }
 
 // Filter state interface
@@ -13,6 +15,7 @@ export interface FilterState {
   minCapacity: string;
   acPreference: 'any' | 'yes' | 'no';
   washroomPreference: 'any' | 'yes' | 'no';
+  allocationStatus: 'all' | 'allocated' | 'unallocated';
 }
 
 // Toast notification types
@@ -33,10 +36,10 @@ export interface AllocationResult {
 
 // Sample data for seeding
 export const sampleRooms: Omit<Room, 'id' | 'createdAt'>[] = [
-  { roomNo: '101', capacity: 2, hasAC: true, hasAttachedWashroom: true },
-  { roomNo: '102', capacity: 3, hasAC: false, hasAttachedWashroom: false },
-  { roomNo: '103', capacity: 4, hasAC: true, hasAttachedWashroom: false },
-  { roomNo: '104', capacity: 2, hasAC: false, hasAttachedWashroom: true },
-  { roomNo: '105', capacity: 5, hasAC: true, hasAttachedWashroom: true },
-  { roomNo: '106', capacity: 3, hasAC: true, hasAttachedWashroom: false },
+  { roomNo: '101', capacity: 2, hasAC: true, hasAttachedWashroom: true, isAllocated: false },
+  { roomNo: '102', capacity: 3, hasAC: false, hasAttachedWashroom: false, isAllocated: false },
+  { roomNo: '103', capacity: 4, hasAC: true, hasAttachedWashroom: false, isAllocated: false },
+  { roomNo: '104', capacity: 2, hasAC: false, hasAttachedWashroom: true, isAllocated: false },
+  { roomNo: '105', capacity: 5, hasAC: true, hasAttachedWashroom: true, isAllocated: false },
+  { roomNo: '106', capacity: 3, hasAC: true, hasAttachedWashroom: false, isAllocated: false },
 ];

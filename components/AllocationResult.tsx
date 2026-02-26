@@ -1,16 +1,28 @@
 'use client';
 
-import { CheckCircle, XCircle, Wind, Droplet, Users } from 'lucide-react';
+import { CheckCircle, XCircle, Wind, Droplet, Users, UserCheck } from 'lucide-react';
 import { AllocationResult as AllocationResultType } from '@/app/types';
 
 interface AllocationResultProps {
   result: AllocationResultType | null;
+  onAllocateTo?: (room: AllocationResultType & { room: NonNullable<AllocationResultType['room']> }) => void;
+  showAllocateTo?: boolean;
 }
 
-export const AllocationResult: React.FC<AllocationResultProps> = ({ result }) => {
+export const AllocationResult: React.FC<AllocationResultProps> = ({ 
+  result, 
+  onAllocateTo,
+  showAllocateTo = false 
+}) => {
   if (!result) {
     return null;
   }
+
+  const handleAllocateTo = () => {
+    if (result.room && onAllocateTo) {
+      onAllocateTo({ ...result, room: result.room });
+    }
+  };
 
   return (
     <div
@@ -103,6 +115,16 @@ export const AllocationResult: React.FC<AllocationResultProps> = ({ result }) =>
                   </div>
                 </div>
               </div>
+
+              {showAllocateTo && onAllocateTo && (
+                <button
+                  onClick={handleAllocateTo}
+                  className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
+                >
+                  <UserCheck className="w-4 h-4" />
+                  Allocate to Student(s)
+                </button>
+              )}
             </div>
           )}
         </div>

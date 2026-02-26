@@ -7,13 +7,17 @@ import { RoomCard } from './RoomCard';
 interface RoomListProps {
   rooms: Room[];
   onDelete?: (id: string) => void;
+  onDeallocate?: (id: string) => void;
   showDelete?: boolean;
+  showDeallocate?: boolean;
 }
 
 export const RoomList: React.FC<RoomListProps> = ({
   rooms,
   onDelete,
+  onDeallocate,
   showDelete = false,
+  showDeallocate = false,
 }) => {
   if (rooms.length === 0) {
     return (
@@ -38,7 +42,9 @@ export const RoomList: React.FC<RoomListProps> = ({
           key={room.id}
           room={room}
           onDelete={onDelete}
+          onDeallocate={onDeallocate}
           showDelete={showDelete}
+          showDeallocate={showDeallocate}
         />
       ))}
     </div>

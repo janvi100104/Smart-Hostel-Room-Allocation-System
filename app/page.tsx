@@ -7,10 +7,11 @@ import { RoomList } from '@/components/RoomList';
 import { FilterPanel } from '@/components/FilterPanel';
 import { AllocationForm } from '@/components/AllocationForm';
 import { AllocationResult } from '@/components/AllocationResult';
+import { AllocateToForm } from '@/components/AllocateToForm';
 import { ToastContainer } from '@/components/Toast';
 import { useTheme } from '@/hooks/useTheme';
 import { Room, FilterState, ToastMessage, ToastType, AllocationResult as AllocationResultType, sampleRooms } from '@/app/types';
-import { getRooms, addRoom, deleteRoom, isRoomNumberTaken, generateId } from '@/utils/storage';
+import { getRooms, addRoom, deleteRoom, isRoomNumberTaken, allocateRoomToStudents, deallocateRoom } from '@/utils/storage';
 
 export default function Home() {
   const { theme, toggleTheme, isMounted } = useTheme();
@@ -19,9 +20,11 @@ export default function Home() {
     minCapacity: '',
     acPreference: 'any',
     washroomPreference: 'any',
+    allocationStatus: 'all',
   });
   const [allocationResult, setAllocationResult] = useState<AllocationResultType | null>(null);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [roomToAllocate, setRoomToAllocate] = useState<Room | null>(null);
 
   // Load rooms on mount
   useEffect(() => {
@@ -51,6 +54,17 @@ export default function Home() {
     addToast('info', `Room ${room?.roomNo} deleted`);
   };
 
+  const handleDeallocateRoom = (roomId: string) => {
+    const room = rooms.find((r) => r.id === roomId);
+    deallocateRoom(roomId);
+    setRooms((prev) =>
+      prev.map((r) =>
+        r.id === roomId ? { ...r, isAllocated: false, allocatedTo: undefined } : r
+      )
+    );
+    addToast('info', `Room ${room?.roomNo} deallocated`);
+  };
+
   // Filter handlers
   const handleFiltersChange = (newFilters: FilterState) => {
     setFilters(newFilters);
@@ -64,6 +78,23 @@ export default function Home() {
     } else {
       addToast('error', result.message);
     }
+  };
+
+  // Handle allocating to specific student
+  const handleAllocateTo = (result: AllocationResultType & { room: NonNullable<AllocationResultType['room']> }) => {
+    setRoomToAllocate(result.room);
+  };
+
+  const handleAllocateToComplete = (updatedRoom: Room, success: boolean) => {
+    if (success) {
+      setRooms((prev) =>
+        prev.map((r) =>
+          r.id === updatedRoom.id ? updatedRoom : r
+        )
+      );
+      addToast('success', `Room ${updatedRoom.roomNo} allocated to ${updatedRoom.allocatedTo}`);
+    }
+    setRoomToAllocate(null);
   };
 
   // Seed data handler
@@ -82,6 +113,7 @@ export default function Home() {
           capacity: roomData.capacity,
           hasAC: roomData.hasAC,
           hasAttachedWashroom: roomData.hasAttachedWashroom,
+          isAllocated: roomData.isAllocated,
         });
       }
     });
@@ -110,6 +142,14 @@ export default function Home() {
       return false;
     }
     if (filters.washroomPreference === 'no' && room.hasAttachedWashroom) {
+      return false;
+    }
+
+    // Allocation status filter
+    if (filters.allocationStatus === 'allocated' && !room.isAllocated) {
+      return false;
+    }
+    if (filters.allocationStatus === 'unallocated' && room.isAllocated) {
       return false;
     }
 
@@ -147,7 +187,11 @@ export default function Home() {
               onError={(msg) => addToast('error', msg)}
             />
 
-            <AllocationResult result={allocationResult} />
+            <AllocationResult 
+              result={allocationResult} 
+              showAllocateTo={true}
+              onAllocateTo={handleAllocateTo}
+            />
           </div>
 
           {/* Right Column - Room List & Filters */}
@@ -162,11 +206,23 @@ export default function Home() {
             <RoomList
               rooms={filteredRooms}
               onDelete={handleDeleteRoom}
+              onDeallocate={handleDeallocateRoom}
               showDelete={true}
+              showDeallocate={true}
             />
           </div>
         </div>
       </main>
+
+      {/* Allocate to Student Modal */}
+      {roomToAllocate && (
+        <AllocateToForm
+          room={roomToAllocate}
+          onAllocationComplete={handleAllocateToComplete}
+          onError={(msg) => addToast('error', msg)}
+          onClose={() => setRoomToAllocate(null)}
+        />
+      )}
 
       {/* Footer */}
       <footer className="mt-16 py-8 border-t border-gray-200 dark:border-gray-800">

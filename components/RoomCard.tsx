@@ -1,24 +1,46 @@
 'use client';
 
-import { Wind, Droplet, Trash2 } from 'lucide-react';
+import { Wind, Droplet, Trash2, Users, CheckCircle, XCircle } from 'lucide-react';
 import { Room } from '@/app/types';
 
 interface RoomCardProps {
   room: Room;
   onDelete?: (id: string) => void;
+  onDeallocate?: (id: string) => void;
   showDelete?: boolean;
+  showDeallocate?: boolean;
 }
 
 export const RoomCard: React.FC<RoomCardProps> = ({
   room,
   onDelete,
+  onDeallocate,
   showDelete = false,
+  showDeallocate = false,
 }) => {
   const getStatus = () => {
-    if (room.capacity <= 0) {
-      return { label: 'Full', color: 'bg-red-500', textColor: 'text-red-600 dark:text-red-400' };
+    if (room.isAllocated) {
+      return { 
+        label: 'Allocated', 
+        color: 'bg-red-500', 
+        textColor: 'text-red-600 dark:text-red-400',
+        icon: <XCircle className="w-4 h-4" />
+      };
     }
-    return { label: 'Available', color: 'bg-green-500', textColor: 'text-green-600 dark:text-green-400' };
+    if (room.capacity <= 0) {
+      return { 
+        label: 'Full', 
+        color: 'bg-orange-500', 
+        textColor: 'text-orange-600 dark:text-orange-400',
+        icon: <Users className="w-4 h-4" />
+      };
+    }
+    return { 
+      label: 'Available', 
+      color: 'bg-green-500', 
+      textColor: 'text-green-600 dark:text-green-400',
+      icon: <CheckCircle className="w-4 h-4" />
+    };
   };
 
   const status = getStatus();
@@ -33,7 +55,8 @@ export const RoomCard: React.FC<RoomCardProps> = ({
               Room {room.roomNo}
             </span>
           </div>
-          <div className={`px-2 py-1 rounded-full text-xs font-semibold text-white ${status.color}`}>
+          <div className={`px-2 py-1 rounded-full text-xs font-semibold text-white flex items-center gap-1 ${status.color}`}>
+            {status.icon}
             {status.label}
           </div>
         </div>
@@ -49,6 +72,19 @@ export const RoomCard: React.FC<RoomCardProps> = ({
               {room.capacity} {room.capacity === 1 ? 'person' : 'people'}
             </span>
           </div>
+
+          {/* Allocated To */}
+          {room.isAllocated && room.allocatedTo && (
+            <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3 border border-red-100 dark:border-red-800">
+              <div className="flex items-start gap-2">
+                <Users className="w-4 h-4 text-red-600 dark:text-red-400 mt-0.5" />
+                <div>
+                  <p className="text-xs font-medium text-red-700 dark:text-red-300">Allocated to:</p>
+                  <p className="text-sm text-red-800 dark:text-red-200">{room.allocatedTo}</p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Features */}
           <div className="flex items-center gap-4">
@@ -76,16 +112,27 @@ export const RoomCard: React.FC<RoomCardProps> = ({
           </div>
         </div>
 
-        {/* Delete Button */}
-        {showDelete && onDelete && (
-          <button
-            onClick={() => onDelete(room.id)}
-            className="mt-4 w-full flex items-center justify-center gap-2 px-3 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors text-sm font-medium opacity-0 group-hover:opacity-100"
-          >
-            <Trash2 className="w-4 h-4" />
-            Delete Room
-          </button>
-        )}
+        {/* Action Buttons */}
+        <div className="mt-4 flex gap-2">
+          {showDeallocate && onDeallocate && room.isAllocated && (
+            <button
+              onClick={() => onDeallocate(room.id)}
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors text-sm font-medium"
+            >
+              Deallocate
+            </button>
+          )}
+          
+          {showDelete && onDelete && (
+            <button
+              onClick={() => onDelete(room.id)}
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors text-sm font-medium"
+            >
+              <Trash2 className="w-4 h-4" />
+              Delete
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

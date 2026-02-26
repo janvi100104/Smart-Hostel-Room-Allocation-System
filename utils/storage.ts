@@ -54,6 +54,32 @@ export const updateRoom = (updatedRoom: Room): void => {
   saveRooms(updatedRooms);
 };
 
+// Allocate room to students
+export const allocateRoomToStudents = (roomId: string, studentNames: string): Room | null => {
+  const rooms = getRooms();
+  const roomIndex = rooms.findIndex((r) => r.id === roomId);
+  
+  if (roomIndex === -1) return null;
+  
+  rooms[roomIndex].isAllocated = true;
+  rooms[roomIndex].allocatedTo = studentNames;
+  saveRooms(rooms);
+  return rooms[roomIndex];
+};
+
+// Deallocate room
+export const deallocateRoom = (roomId: string): Room | null => {
+  const rooms = getRooms();
+  const roomIndex = rooms.findIndex((r) => r.id === roomId);
+  
+  if (roomIndex === -1) return null;
+  
+  rooms[roomIndex].isAllocated = false;
+  rooms[roomIndex].allocatedTo = undefined;
+  saveRooms(rooms);
+  return rooms[roomIndex];
+};
+
 // Check if room number already exists
 export const isRoomNumberTaken = (roomNo: string, excludeId?: string): boolean => {
   const rooms = getRooms();
@@ -83,6 +109,12 @@ export const getTheme = (): 'light' | 'dark' => {
 export const saveTheme = (theme: 'light' | 'dark'): void => {
   try {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
+    // Also apply to document element immediately
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   } catch (error) {
     console.error('Error saving theme to localStorage:', error);
   }

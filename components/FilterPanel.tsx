@@ -21,6 +21,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
       minCapacity: '',
       acPreference: 'any',
       washroomPreference: 'any',
+      allocationStatus: 'all',
     });
   };
 
@@ -50,7 +51,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Minimum Capacity */}
         <div>
           <label
@@ -119,6 +120,31 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
             <option value="any">Any</option>
             <option value="yes">Washroom Required</option>
             <option value="no">No Washroom</option>
+          </select>
+        </div>
+
+        {/* Allocation Status */}
+        <div>
+          <label
+            htmlFor="allocationStatus"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            Room Status
+          </label>
+          <select
+            id="allocationStatus"
+            value={filters.allocationStatus}
+            onChange={(e) =>
+              onFiltersChange({
+                ...filters,
+                allocationStatus: e.target.value as 'all' | 'allocated' | 'unallocated',
+              })
+            }
+            className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-800 dark:text-white transition-all"
+          >
+            <option value="all">All Rooms</option>
+            <option value="allocated">Allocated</option>
+            <option value="unallocated">Unallocated</option>
           </select>
         </div>
       </div>
